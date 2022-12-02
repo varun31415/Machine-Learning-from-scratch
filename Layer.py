@@ -7,23 +7,26 @@ class Layer:
 
     def forward(self, input_data):
         self.input_before = input_data
-        self.input_after = np.dot(self.input_before,self.weights)
-        self.output = 1 - 1/np.exp(self.input_after + self.biases)
+        self.input_after = np.dot(self.input_before,self.weights) + self.biases
+        self.output = self.tanh(self.input_after)
         return self.output
 
-    def sigmoid_prime(x):
-        print(np.exp(-x)/(np.exp(-x) + 1)**2)
+    def sigmoid_prime(self, x):
         return np.exp(-x)/(np.exp(-x) + 1)**2
 
-    def backward(self, output_error, learning_rate):
-        # fc layer back prop
+    def tanh(self, x):
+        return np.tanh(x)
+    
+    def tanh_prime(self, x):
+        return 1-np.tanh(x)**2
+
+    def backward(self, error, learning_rate):
+        output_error = self.tanh_prime(self.input_after) * error
+
         input_error = np.dot(output_error, self.weights.T)
         weights_error = np.dot(self.input_before.T, output_error)
 
-        self.sigmoid_prime(self.input_after) * input_error
-
         self.weights -= learning_rate * weights_error
-        self.bias -= learning_rate * output_error
+        self.biases -= learning_rate * output_error
 
-        #activation back prop
-        return self.sigmoid_prime(self.input_after) * input_error
+        return input_error

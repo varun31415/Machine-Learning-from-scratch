@@ -14,7 +14,6 @@ class Network:
         output = input_layer
         for layer in self.layers:
             output = layer.forward(output)
-
         return output
 
     def loss(self, y_true, y_pred):
@@ -32,8 +31,8 @@ class Network:
                 for layer in self.layers:
                     output = layer.forward(output)
                 
-                error = self.loss_prime(y_train, output)
+                error = self.loss_prime(y_train[j], output)
                 for layer in reversed(self.layers):
                     error = layer.backward(error, learning_rate)
-            print(f"epoch {i}/{epoch}")
+            print("Epoch " + str(i) + "/" + str(epochs))
         print("Done training. ")

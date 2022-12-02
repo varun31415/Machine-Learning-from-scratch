@@ -11,3 +11,5 @@ network.add(Layer(2,3))
 network.add(Layer(3,1))
 
 network.train(x_train, y_train, 1000, 0.1)
+
+print(network.predict(x_train[3]))
